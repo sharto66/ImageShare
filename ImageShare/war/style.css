@@ -1,0 +1,28 @@
+body
+{
+	background-color: #3498db;
+}
+
+#imgframe
+{
+	margin-left: auto;
+    margin-right: auto;
+	height: 25%;
+	width: 20%;
+}
+
+#img
+{
+	margin-left: auto;
+    margin-right: auto;
+    display: block;
+	height: 400px;
+	width: auto;
+}
+
+#title
+{
+	font-size: 200%;
+	text-align: center;
+	font-family: Arial;
+}
