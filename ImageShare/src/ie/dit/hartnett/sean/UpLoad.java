@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
@@ -23,10 +24,12 @@ public class UpLoad extends HttpServlet {
 
 private static final
 long serialVersionUID = 1L;
-private BlobstoreService blobstoreService =BlobstoreServiceFactory.getBlobstoreService();
+private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 	@SuppressWarnings("deprecation")
 	Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
+	HttpSession session = req.getSession();
+	session.setAttribute("images", blobs);
 	UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     Date date = new Date();
