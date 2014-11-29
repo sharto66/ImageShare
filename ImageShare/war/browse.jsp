@@ -8,7 +8,6 @@
 <%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
 <%@ page import="com.google.appengine.api.datastore.Key" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
-<%-- <%@ page import="com.google.appengine.api.datastore.Query" %> --%>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
 <%@ page import="java.util.*" %>
@@ -49,9 +48,13 @@
 		  Query dbinf = pm.newQuery("select from " + DBInfo.class.getName());  
  		  List<DBInfo> dbInfo = (List<DBInfo>) dbinf.execute();  %>
 		  
+		  <div id="imgframe">
 		  <%for(ImageStore i : images)
 		    {%>
 			  <img id="img" src="<%= "/serve?blob-key=" + i.imgKey %>"/></br>
+			  Uploaded by: <%out.println(i.user); %></br>
+			  Date: <%out.println(i.date); %></br></br>
 		   <%}%>
+		   </div>
 </body>
 </html>
