@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import javax.jdo.PersistenceManager;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 
 public class UpLoad extends HttpServlet {
 	
-	public static ArrayList<ImageStore> images = new ArrayList<ImageStore>();
+	//public static ArrayList<ImageStore> images = new ArrayList<ImageStore>();
 
 private static final
 long serialVersionUID = 1L;
@@ -28,8 +29,6 @@ private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstore
 public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 	@SuppressWarnings("deprecation")
 	Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
-	HttpSession session = req.getSession();
-	session.setAttribute("images", blobs);
 	UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     Date date = new Date();
@@ -40,6 +39,16 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 	}
 	else
 	{
+		PersistenceManager persist = PMF.get().getPersistenceManager();
+		ImageStore img = new ImageStore("Sean", date, blobKey.getKeyString());
+		try
+		{
+			persist.makePersistent(img);
+		}  
+	    finally
+	    {
+	    	persist.close();
+	    }  
 		System.out.println("Uploaded a file with blobKey:"+blobKey.getKeyString());
 		//res.sendRedirect("/serve?blob-key=" + blobKey.getKeyString());
 		res.sendRedirect("/browse.jsp?blob-key=" + blobKey.getKeyString());

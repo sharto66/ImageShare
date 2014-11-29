@@ -8,10 +8,15 @@
 <%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
 <%@ page import="com.google.appengine.api.datastore.Key" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
-<%@ page import="com.google.appengine.api.datastore.Query" %>
+<%-- <%@ page import="com.google.appengine.api.datastore.Query" %> --%>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
 <%@ page import="java.util.*" %>
+<%@ page import="javax.jdo.Query" %> 
+<%@ page import="ie.dit.hartnett.sean.ImageStore" %>
+<%@ page import="ie.dit.hartnett.sean.PMF" %>
+<%@ page import="ie.dit.hartnett.sean.DBInfo" %>
+<%@ page import="javax.jdo.PersistenceManager" %> 
 <%@ page import="com.google.appengine.api.blobstore.BlobKey" %>
 <%BlobstoreService blobstoreService =BlobstoreServiceFactory.getBlobstoreService();%>
 
@@ -38,27 +43,15 @@
 		<%String blob = request.getParameter("blob-key");%>
 <%-- 		<img id="img" src="<%="/serve?blob-key=" + blob %>"/> --%>
 		
-		<%Map<String, BlobKey> blobs = new HashMap<String, BlobKey>(); %>
-		<% try
-		   {
-				blobs = blobstoreService.getUploadedBlobs(request);
-				out.println("Test");
-			}
-		   catch(IllegalStateException e){out.println("Error" + "</br>");}%>
-		   <%out.println("other test" + "</br>");%>
-		   <% blobs = (Map<String, BlobKey>)(request.getSession().getAttribute("images"));%>
- 		   <%for(BlobKey b : blobs.values())
- 			{
- 			   out.println("Test");%>
- 					<img id="img" src="<%="/serve?blob-key=" + b.getKeyString() %>"/></br>
- 					Hello</br>
- 		   <%}%>
-		   
-<%-- 		<%for(BlobKey b : blobs.values()) --%>
-<%-- 		  {%> --%>
-<%-- 			<img id="img" src="<%="/serve?blob-key=" + b.getKeyString() %>"/> --%>
-<!-- 			image test</br> -->
-<%-- 		  <%}%> --%>
-<%-- 	  	<img id="img" src="<%="/serve?blob-key=" + blob %>"/> --%>
+		<%PersistenceManager pm = PMF.get().getPersistenceManager();  
+		  Query query = pm.newQuery("select from " + ImageStore.class.getName());  
+		  List<ImageStore> images = (List<ImageStore>) query.execute();
+		  Query dbinf = pm.newQuery("select from " + DBInfo.class.getName());  
+ 		  List<DBInfo> dbInfo = (List<DBInfo>) dbinf.execute();  %>
+		  
+		  <%for(ImageStore i : images)
+		    {%>
+			  <img id="img" src="<%= "/serve?blob-key=" + i.imgKey %>"/></br>
+		   <%}%>
 </body>
 </html>
