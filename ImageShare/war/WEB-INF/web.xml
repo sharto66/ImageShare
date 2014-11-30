@@ -5,12 +5,12 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
-		<servlet-name>ImageShare</servlet-name>
-		<servlet-class>ie.dit.hartnett.sean.ImageShareServlet</servlet-class>
+		<servlet-name>Login</servlet-name>
+		<servlet-class>ie.dit.hartnett.sean.Login</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>ImageShare</servlet-name>
-		<url-pattern>/imageshare</url-pattern>
+		<servlet-name>Login</servlet-name>
+		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>

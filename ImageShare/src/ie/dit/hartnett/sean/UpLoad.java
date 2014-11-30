@@ -40,7 +40,7 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 	else
 	{
 		PersistenceManager persist = PMF.get().getPersistenceManager();
-		ImageStore img = new ImageStore("Sean", date, blobKey.getKeyString());
+		ImageStore img = new ImageStore(user.getEmail().toString(), date, blobKey.getKeyString());
 		try
 		{
 			persist.makePersistent(img);
@@ -51,7 +51,7 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 	    }  
 		System.out.println("Uploaded a file with blobKey:"+blobKey.getKeyString());
 		//res.sendRedirect("/serve?blob-key=" + blobKey.getKeyString());
-		res.sendRedirect("/browse.jsp?blob-key=" + blobKey.getKeyString());
+		res.sendRedirect("/browse.jsp");
 	}
 }
 }
