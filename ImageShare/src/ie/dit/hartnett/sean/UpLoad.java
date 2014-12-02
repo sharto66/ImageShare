@@ -20,8 +20,6 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 public class UpLoad extends HttpServlet {
-	
-	//public static ArrayList<ImageStore> images = new ArrayList<ImageStore>();
 
 private static final
 long serialVersionUID = 1L;
@@ -51,7 +49,7 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 	    }  
 		System.out.println("Uploaded a file with blobKey:"+blobKey.getKeyString());
 		//res.sendRedirect("/serve?blob-key=" + blobKey.getKeyString());
-		res.sendRedirect("/browse.jsp");
+		res.sendRedirect("/");
 	}
 }
 }

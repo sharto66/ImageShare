@@ -20,7 +20,7 @@
 <%@ page import="com.google.appengine.api.blobstore.BlobKey" %>
 <%@ page import="java.util.List" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%BlobstoreService blobstoreService =BlobstoreServiceFactory.getBlobstoreService();%>
+<%BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();%>
 <%UserService userService = UserServiceFactory.getUserService();
   String URL = request.getRequestURI();
   Principal princ = request.getUserPrincipal();%>
@@ -32,11 +32,7 @@
 </head>
 <body>
 	<h1 id="title"><b>IMAGESHARE</b></h1></br>
-		<div id="upload">
-			<form action="<%= blobstoreService.createUploadUrl("/upload") %>"method="post" enctype="multipart/form-data">
-			<input type="file" accept="image/*" name="myFile"></br>
-			<input type="submit" value="Upload"></form>
-		</div>
+		
 		<div id="login">
 				<% String username = null; %>
 				<%try
@@ -50,8 +46,17 @@
 				Logged in as <%= "<b>" + username + "</b>" %></br>
 				<a href="<%= userService.createLoginURL(URL).toString() %>"><b>Login Here</b></a></br>
 				<a href="<%= userService.createLogoutURL(URL).toString() %>"><b>Logout Here</b></a>
-				
 		</div>
+		
+		<div id="upload">
+			<% if(username != "Guest")
+			   {%>
+					<form action="<%= blobstoreService.createUploadUrl("/upload") %>"method="post" enctype="multipart/form-data">
+					<input type="file" accept="image/*" name="myFile"></br>
+					<input type="submit" value="Upload"></form>
+			 <%}%>
+		</div>
+		
 		</br>
 		<%String blob = request.getParameter("blob-key");%>
 <%-- 		<img id="img" src="<%="/serve?blob-key=" + blob %>"/> --%>
@@ -67,6 +72,13 @@
 		  <%for(ImageStore i : images)
 		    {%>
 			  <img id="img" src="<%= "/serve?blob-key=" + i.imgKey %>"/></br>
+			  <% if(username != "Guest")
+			  	 {
+			  		if(userService.isUserAdmin())
+				     {%>
+				     	<a href="<%=response.encodeURL("/delete?deleteKey=" + i.imgKey)%>">Delete</a></br>
+				   <%}
+				 }%>
 			  Uploaded by: <%out.println("<b>" + i.user + "</b>"); %></br>
 			  Date: <%out.println(i.date); %></br></br>
 		   <%}%>

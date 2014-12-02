@@ -7,8 +7,9 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.blobstore.BlobstoreServicePb.BlobstoreService;
 
+
 public class Serve extends HttpServlet {
-private com.google.appengine.api.blobstore.BlobstoreService blobstoreService =BlobstoreServiceFactory.getBlobstoreService();
+private com.google.appengine.api.blobstore.BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 public void doGet(HttpServletRequest req, HttpServletResponse res)
 throws IOException {
 		BlobKey blobKey = new BlobKey(req.getParameter("blob-key"));
