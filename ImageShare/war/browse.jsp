@@ -5,10 +5,6 @@
 <%@ page import="java.security.Principal" %>
 <%@ page import="com.google.appengine.api.datastore.DatastoreService" %>
 <%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
-<%@ page import="com.google.appengine.api.datastore.Entity" %>
-<%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
-<%@ page import="com.google.appengine.api.datastore.Key" %>
-<%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
 <%@ page import="java.util.*" %>
@@ -44,43 +40,52 @@
 					username = "Guest";
 				  }%>
 				Logged in as <%= "<b>" + username + "</b>" %></br>
-				<a href="<%= userService.createLoginURL(URL).toString() %>"><b>Login Here</b></a></br>
-				<a href="<%= userService.createLogoutURL(URL).toString() %>"><b>Logout Here</b></a>
+				<a href="<%= userService.createLoginURL(URL).toString() %>"><b>Login</b></a></br>
 		</div>
 		
 		<div id="upload">
 			<% if(username != "Guest")
-			   {%>
+ 			   {%>	<%--This form uploads a blob, then sends a callback to the upload servlet --%>
 					<form action="<%= blobstoreService.createUploadUrl("/upload") %>"method="post" enctype="multipart/form-data">
 					<input type="file" accept="image/*" name="myFile"></br>
+					Private Image <input type="checkbox" name="Private" value="private"
+									<%if(userService.isUserAdmin()) out.println("checked"); %>></br>
 					<input type="submit" value="Upload"></form>
 			 <%}%>
 		</div>
-		
 		</br>
-		<%String blob = request.getParameter("blob-key");%>
-<%-- 		<img id="img" src="<%="/serve?blob-key=" + blob %>"/> --%>
-		
+		</br>
+<!-- 		code below gets the database and loads its ImageStore table into a list -->
 		<%PersistenceManager pm = PMF.get().getPersistenceManager();  
 		  Query query = pm.newQuery("select from " + ImageStore.class.getName());  
 		  List<ImageStore> images = (List<ImageStore>) query.execute();
-// 		  Query dbinf = pm.newQuery("select from " + DBInfo.class.getName());  
-//  		  List<DBInfo> dbInfo = (List<DBInfo>) dbinf.execute();
  		  %>
 		  </br></br>
 		  <div id="imgframe">
-		  <%for(ImageStore i : images)
+		  <%for(ImageStore i : images)//this for loop iterates through all the stored images
 		    {%>
-			  <img id="img" src="<%= "/serve?blob-key=" + i.imgKey %>"/></br>
-			  <% if(username != "Guest")
-			  	 {
-			  		if(userService.isUserAdmin())
-				     {%>
-				     	<a href="<%=response.encodeURL("/delete?deleteKey=" + i.imgKey)%>">Delete</a></br>
-				   <%}
-				 }%>
-			  Uploaded by: <%out.println("<b>" + i.user + "</b>"); %></br>
-			  Date: <%out.println(i.date); %></br></br>
+		      <%if(userService.isUserLoggedIn() || !i.privateImg)
+		        {%>
+				  <a href="<%= "/serve?blob-key=" + i.imgKey %>"><img id="img" src="<%= "/serve?blob-key=" + i.imgKey %>"/></a></br>
+				  <% if(username != "Guest")
+				  	 {
+				  		if(userService.isUserAdmin() ||  username.equals(i.user))
+					     {%>
+					     	<a href="<%=response.encodeURL("/delete?deleteKey=" + i.imgKey)%>">Delete</a></br>
+					   <%}
+					 }%>
+				  Uploaded by: <%out.println("<b>" + i.user + "</b>"); %></br>
+				  Date: <%out.println(i.date); %></br>
+				  <%if(!i.privateImg)
+					{
+						out.println("<b>Public</b>");
+					}
+					else
+					{
+						out.println("<b>Private</b>");
+					}%></br></br>
+				  
+				<%}%>
 		   <%}%>
 		   </div>
 </body>

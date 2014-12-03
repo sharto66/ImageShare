@@ -30,6 +30,7 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 	UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     Date date = new Date();
+    boolean privateImg;
 	BlobKey blobKey = blobs.get("myFile");
 	if (blobKey == null)
 	{
@@ -37,8 +38,26 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 	}
 	else
 	{
+		String pri = null;
+		try
+		{
+			pri = req.getParameter("Private");
+		}
+		catch(NullPointerException e)
+		{
+			pri = "";
+		}
+		System.out.println("Image = " + pri);
+		if(pri.contains("private"))
+		{
+			privateImg = true;
+		}
+		else
+		{
+			privateImg = false;
+		}
 		PersistenceManager persist = PMF.get().getPersistenceManager();
-		ImageStore img = new ImageStore(user.getEmail().toString(), date, blobKey.getKeyString());
+		ImageStore img = new ImageStore(user.getEmail().toString(), date, blobKey.getKeyString(), privateImg);
 		try
 		{
 			persist.makePersistent(img);

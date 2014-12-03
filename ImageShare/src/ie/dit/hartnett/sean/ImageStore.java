@@ -21,18 +21,22 @@ public class ImageStore
 	public Date date;
 	@Persistent
 	public String imgKey;
+	@Persistent
+	public boolean privateImg;
 	
 	public ImageStore()
 	{
 		this.user = "";
 		this.date = new Date();
 		this.imgKey = "";
+		this.privateImg = false;
 	}
 	
-	public ImageStore(String user, Date date, String imgKey)
+	public ImageStore(String user, Date date, String imgKey, boolean privateImg)
 	{
 		this.user = user;
 		this.date = date;
 		this.imgKey = imgKey;
+		this.privateImg = privateImg;
 	}
 }
