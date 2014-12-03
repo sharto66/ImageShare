@@ -8,13 +8,13 @@
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
 <%@ page import="java.util.*" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="javax.jdo.Query" %> 
 <%@ page import="ie.dit.hartnett.sean.ImageStore" %>
 <%@ page import="ie.dit.hartnett.sean.PMF" %>
 <%@ page import="ie.dit.hartnett.sean.DBInfo" %>
 <%@ page import="javax.jdo.PersistenceManager" %> 
 <%@ page import="com.google.appengine.api.blobstore.BlobKey" %>
-<%@ page import="java.util.List" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();%>
 <%UserService userService = UserServiceFactory.getUserService();
@@ -56,9 +56,12 @@
 		</br>
 		</br>
 <!-- 		code below gets the database and loads its ImageStore table into a list -->
-		<%PersistenceManager pm = PMF.get().getPersistenceManager();  
+		<%
+		  PersistenceManager pm = PMF.get().getPersistenceManager();  
 		  Query query = pm.newQuery("select from " + ImageStore.class.getName());  
 		  List<ImageStore> images = (List<ImageStore>) query.execute();
+		  Query dbinf = pm.newQuery("select from " + DBInfo.class.getName());  
+		  List<DBInfo> dbInfo = (List<DBInfo>) dbinf.execute();
  		  %>
 		  </br></br>
 		  <div id="imgframe">
@@ -75,7 +78,7 @@
 					   <%}
 					 }%>
 				  Uploaded by: <%out.println("<b>" + i.user + "</b>"); %></br>
-				  Date: <%out.println(i.date); %></br>
+				  Date: <%SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");out.println(dateFormat.format(i.date)); %></br>
 				  <%if(!i.privateImg)
 					{
 						out.println("<b>Public</b>");

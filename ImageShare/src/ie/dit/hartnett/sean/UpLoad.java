@@ -45,17 +45,20 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 		}
 		catch(NullPointerException e)
 		{
-			pri = "";
+			pri = "not";
 		}
 		System.out.println("Image = " + pri);
-		if(pri.contains("private"))
+		if(pri==String.valueOf("private"))
 		{
 			privateImg = true;
+			System.out.println("Private");
 		}
 		else
 		{
 			privateImg = false;
+			System.out.println("Not Private");
 		}
+		System.out.println("Before Persist");
 		PersistenceManager persist = PMF.get().getPersistenceManager();
 		ImageStore img = new ImageStore(user.getEmail().toString(), date, blobKey.getKeyString(), privateImg);
 		try
