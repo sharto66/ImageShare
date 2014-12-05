@@ -30,7 +30,7 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 	UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     Date date = new Date();
-    boolean privateImg;
+    boolean privateImg = false;
 	BlobKey blobKey = blobs.get("myFile");
 	if (blobKey == null)
 	{
@@ -48,15 +48,10 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 			pri = "not";
 		}
 		System.out.println("Image = " + pri);
-		if(pri==String.valueOf("private"))
+		if(pri == String.valueOf("private"))
 		{
 			privateImg = true;
 			System.out.println("Private");
-		}
-		else
-		{
-			privateImg = false;
-			System.out.println("Not Private");
 		}
 		System.out.println("Before Persist");
 		PersistenceManager persist = PMF.get().getPersistenceManager();
@@ -70,7 +65,6 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 	    	persist.close();
 	    }  
 		System.out.println("Uploaded a file with blobKey:"+blobKey.getKeyString());
-		//res.sendRedirect("/serve?blob-key=" + blobKey.getKeyString());
 		res.sendRedirect("/");
 	}
 }

@@ -1,7 +1,14 @@
-body
+* {
+   margin: 0px;
+   padding: 0px;
+}
+html, body, div
 {
-	background-color: #3498db;
+	background-color: #ecf0f1;
 	font-family: Arial;
+	margin: 0;
+    padding: 0;
+    border: 0;
 }
 
 #imgframe
@@ -23,18 +30,41 @@ body
 
 #title
 {
-	font-size: 300%;
+	font-size: 350%;
 	text-align: center;
-	font-family: Arial;
+	font-family: "Courier New", Courier, monospace;
+	background-color: #2980b9;
+	width: 100%;
+	vertical-align: center;
 }
 
 #upload
 {
 	float: left;
+	background-color: #2980b9;
+	padding-left: 15px;
+	vertical-align: center;
+	padding-top: 0px;
 }
 
 #login
 {
 	float:right;
-	text-align: right;
+	background-color: #2980b9;
+	padding-right: 15px;
+	vertical-align: center;
+	padding-top: 0px;
+}
+
+#navbar
+{
+	background-color: #2980b9;
+	overflow: auto;
+	height: 15%;
+	text-align: center;
+	position: fixed;
+	width: 100%;
+	vertical-align: center;
+	padding: 0px;
+	margin: 0px;
 }

@@ -27,8 +27,8 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-	<h1 id="title"><b>IMAGESHARE</b></h1></br>
-		
+	<div id=navbar>
+	<h1 id="title"><b>IMAGESHARE</b></h1>
 		<div id="login">
 				<% String username = null; %>
 				<%try
@@ -39,22 +39,24 @@
 				  {
 					username = "Guest";
 				  }%>
-				Logged in as <%= "<b>" + username + "</b>" %></br>
-				<a href="<%= userService.createLoginURL(URL).toString() %>"><b>Login</b></a></br>
+				Logged in as <%= "<b>" + username + "</b>" %>
+				<a href="<%= userService.createLoginURL(URL).toString() %>"><b>Login</b></a>
+				<a href="<%= userService.createLogoutURL(URL).toString() %>"><b>Logout</b></a>
 		</div>
 		
 		<div id="upload">
 			<% if(username != "Guest")
  			   {%>	<%--This form uploads a blob, then sends a callback to the upload servlet --%>
 					<form action="<%= blobstoreService.createUploadUrl("/upload") %>"method="post" enctype="multipart/form-data">
-					<input type="file" accept="image/*" name="myFile"></br>
+					<input type="file" accept="image/*" name="myFile">
 					Private Image <input type="checkbox" name="Private" value="private"
-									<%if(userService.isUserAdmin()) out.println("checked"); %>></br>
+									<%if(userService.isUserAdmin()) out.println("checked"); %>>
+					&nbsp;&nbsp;&nbsp;
 					<input type="submit" value="Upload"></form>
 			 <%}%>
 		</div>
-		</br>
-		</br>
+		</div> <!-- end navbar div -->
+		</br></br></br></br></br></br>
 <!-- 		code below gets the database and loads its ImageStore table into a list -->
 		<%
 		  PersistenceManager pm = PMF.get().getPersistenceManager();  
@@ -63,7 +65,7 @@
 		  Query dbinf = pm.newQuery("select from " + DBInfo.class.getName());  
 		  List<DBInfo> dbInfo = (List<DBInfo>) dbinf.execute();
  		  %>
-		  </br></br>
+		  
 		  <div id="imgframe">
 		  <%for(ImageStore i : images)//this for loop iterates through all the stored images
 		    {%>
@@ -72,13 +74,13 @@
 				  <a href="<%= "/serve?blob-key=" + i.imgKey %>"><img id="img" src="<%= "/serve?blob-key=" + i.imgKey %>"/></a></br>
 				  <% if(username != "Guest")
 				  	 {
-				  		if(userService.isUserAdmin() ||  username.equals(i.user))
+				  		 if(userService.isUserAdmin() ||  username.equals(i.user))
 					     {%>
 					     	<a href="<%=response.encodeURL("/delete?deleteKey=" + i.imgKey)%>">Delete</a></br>
 					   <%}
 					 }%>
 				  Uploaded by: <%out.println("<b>" + i.user + "</b>"); %></br>
-				  Date: <%SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");out.println(dateFormat.format(i.date)); %></br>
+				  Date: <%SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss");out.println(dateFormat.format(i.date)); %></br>
 				  <%if(!i.privateImg)
 					{
 						out.println("<b>Public</b>");
