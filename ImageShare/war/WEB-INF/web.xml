@@ -32,15 +32,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>Store</servlet-name>
-		<servlet-class>ie.dit.hartnett.sean.Store</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Store</servlet-name>
-		<url-pattern>/store</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
 		<servlet-name>Delete</servlet-name>
 		<servlet-class>ie.dit.hartnett.sean.Delete</servlet-class>
 	</servlet>

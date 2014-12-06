@@ -25,46 +25,53 @@ private static final
 long serialVersionUID = 1L;
 private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-	@SuppressWarnings("deprecation")
-	Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
 	UserService userService = UserServiceFactory.getUserService();
-    User user = userService.getCurrentUser();
-    Date date = new Date();
-    boolean privateImg = false;
-	BlobKey blobKey = blobs.get("myFile");
-	if (blobKey == null)
+	if(userService.isUserLoggedIn())
 	{
-		res.sendRedirect("/");
+		@SuppressWarnings("deprecation")
+		Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
+	    User user = userService.getCurrentUser();
+	    Date date = new Date();
+	    boolean privateImg = false;
+		BlobKey blobKey = blobs.get("myFile");
+		if (blobKey == null)
+		{
+			res.sendRedirect("/");
+		}
+		else
+		{
+			String pri = null;
+			try
+			{
+				pri = req.getParameter("Private");
+			}
+			catch(NullPointerException e)
+			{
+				pri = "not";
+			}
+			System.out.println("Image = " + pri);
+			if(pri == String.valueOf("private"))
+			{
+				privateImg = true;
+				System.out.println("Private");
+			}
+			System.out.println("Before Persist");
+			PersistenceManager persist = PMF.get().getPersistenceManager();
+			ImageStore img = new ImageStore(user.getEmail().toString(), date, blobKey.getKeyString(), privateImg);
+			try
+			{
+				persist.makePersistent(img);
+			}  
+		    finally
+		    {
+		    	persist.close();
+		    }  
+			System.out.println("Uploaded a file with blobKey:"+blobKey.getKeyString());
+			res.sendRedirect("/");
+		}
 	}
 	else
 	{
-		String pri = null;
-		try
-		{
-			pri = req.getParameter("Private");
-		}
-		catch(NullPointerException e)
-		{
-			pri = "not";
-		}
-		System.out.println("Image = " + pri);
-		if(pri == String.valueOf("private"))
-		{
-			privateImg = true;
-			System.out.println("Private");
-		}
-		System.out.println("Before Persist");
-		PersistenceManager persist = PMF.get().getPersistenceManager();
-		ImageStore img = new ImageStore(user.getEmail().toString(), date, blobKey.getKeyString(), privateImg);
-		try
-		{
-			persist.makePersistent(img);
-		}  
-	    finally
-	    {
-	    	persist.close();
-	    }  
-		System.out.println("Uploaded a file with blobKey:"+blobKey.getKeyString());
 		res.sendRedirect("/");
 	}
 }

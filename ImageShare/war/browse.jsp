@@ -19,7 +19,8 @@
 <%BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();%>
 <%UserService userService = UserServiceFactory.getUserService();
   String URL = request.getRequestURI();
-  Principal princ = request.getUserPrincipal();%>
+  Principal princ = request.getUserPrincipal();
+  final int num = 5;// this int determines the amount of images per page%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,26 +63,51 @@
 		  PersistenceManager pm = PMF.get().getPersistenceManager();  
 		  Query query = pm.newQuery("select from " + ImageStore.class.getName());  
 		  List<ImageStore> images = (List<ImageStore>) query.execute();
-		  Query dbinf = pm.newQuery("select from " + DBInfo.class.getName());  
-		  List<DBInfo> dbInfo = (List<DBInfo>) dbinf.execute();
+// 		  Query dbinf = pm.newQuery("select from " + DBInfo.class.getName());  
+// 		  List<DBInfo> dbInfo = (List<DBInfo>) dbinf.execute();
+// 		  System.out.println(images.size());
  		  %>
-		  
+		  <%String iterator = null;
+		  int it = 0;
+		  try
+			{
+				iterator = request.getParameter("results");
+			}
+			catch(NullPointerException e)
+			{
+				iterator = String.valueOf(num);
+			}
+			finally
+			{
+				try
+				{
+					it = Integer.parseInt(iterator);
+				}
+				catch(NumberFormatException e)
+				{
+					it = num;
+				}
+			}
+		  int count = 0;
+		  boolean nextPage = true;
+			%>
 		  <div id="imgframe">
-		  <%for(ImageStore i : images)//this for loop iterates through all the stored images
+<%-- 		  <%for(ImageStore i : images)//this for loop iterates through all the stored images --%>
+		  	<%for(count = it - num; count < it; count++)
 		    {%>
-		      <%if(userService.isUserLoggedIn() || !i.privateImg)
+		      <%if(userService.isUserLoggedIn() || !images.get(count).privateImg)
 		        {%>
-				  <a href="<%= "/serve?blob-key=" + i.imgKey %>"><img id="img" src="<%= "/serve?blob-key=" + i.imgKey %>"/></a></br>
+		<a href="<%= "/serve?blob-key=" + images.get(count).imgKey %>"><img id="img" src="<%= "/serve?blob-key=" + images.get(count).imgKey %>"/></a></br>
 				  <% if(username != "Guest")
 				  	 {
-				  		 if(userService.isUserAdmin() ||  username.equals(i.user))
+				  		 if(userService.isUserAdmin() ||  username.equals(images.get(count).user))
 					     {%>
-					     	<a href="<%=response.encodeURL("/delete?deleteKey=" + i.imgKey)%>">Delete</a></br>
+					     	<a href="<%=response.encodeURL("/delete?deleteKey=" + images.get(count).imgKey)%>">Delete</a></br>
 					   <%}
 					 }%>
-				  Uploaded by: <%out.println("<b>" + i.user + "</b>"); %></br>
-				  Date: <%SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss");out.println(dateFormat.format(i.date)); %></br>
-				  <%if(!i.privateImg)
+				  Uploaded by: <%out.println("<b>" + images.get(count).user + "</b>"); %></br>
+				  Date: <%SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss");out.println(dateFormat.format(images.get(count).date)); %></br>
+				  <%if(!images.get(count).privateImg)
 					{
 						out.println("<b>Public</b>");
 					}
@@ -89,9 +115,20 @@
 					{
 						out.println("<b>Private</b>");
 					}%></br></br>
-				  
+					<%if(count == images.size()-1)
+					   {
+						nextPage = false;
+						break; 
+					   }%>
 				<%}%>
-		   <%}%>
+		   <%}//end for loop%>
+		   </br>
+		   <% if(nextPage){ %>
+		   <a href="/browse.jsp?results=<%= it + num %>">Next Page</a>
+		   <%} if(it > num){%>
+		   <a href="/browse.jsp?results=<%= it - num %>">Previous Page</a>
+		   <%} %>
+		   </br></br></br>
 		   </div>
 </body>
 </html>
