@@ -50,7 +50,7 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 				pri = "not";
 			}
 			System.out.println("Image = " + pri);
-			if(pri == String.valueOf("private"))
+			if(pri.contentEquals(String.valueOf("private")))
 			{
 				privateImg = true;
 				System.out.println("Private");

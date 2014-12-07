@@ -40,9 +40,9 @@
 				  {
 					username = "Guest";
 				  }%>
-				Logged in as <%= "<b>" + username + "</b>" %>
-				<a href="<%= userService.createLoginURL(URL).toString() %>"><b>Login</b></a>
-				<a href="<%= userService.createLogoutURL(URL).toString() %>"><b>Logout</b></a>
+				Logged in as <%= "<b>" + username + "</b>" %>&nbsp;&nbsp;
+				<a id="links" href="<%= userService.createLoginURL(URL).toString() %>"><b>&nbsp;Login&nbsp;</b></a>&nbsp;&nbsp;
+				<a id="links" href="<%= userService.createLogoutURL(URL).toString() %>"><b>&nbsp;Logout&nbsp;</b></a>
 		</div>
 		
 		<div id="upload">
@@ -63,13 +63,10 @@
 		  PersistenceManager pm = PMF.get().getPersistenceManager();  
 		  Query query = pm.newQuery("select from " + ImageStore.class.getName());  
 		  List<ImageStore> images = (List<ImageStore>) query.execute();
-// 		  Query dbinf = pm.newQuery("select from " + DBInfo.class.getName());  
-// 		  List<DBInfo> dbInfo = (List<DBInfo>) dbinf.execute();
-// 		  System.out.println(images.size());
  		  %>
 		  <%String iterator = null;
-		  int it = 0;
-		  try
+		  int it = 0;//code below gets value of results parameter from URL, including error checking
+		  try//the value from the results parameter is used to go to display 5 images per page and then a link to the next 5
 			{
 				iterator = request.getParameter("results");
 			}
@@ -88,6 +85,10 @@
 					it = num;
 				}
 			}
+// 		  if(it >= images.size())
+// 		  {
+// 			  it = num;
+// 		  }
 		  int count = 0;
 		  boolean nextPage = true;
 			%>
@@ -123,10 +124,10 @@
 				<%}%>
 		   <%}//end for loop%>
 		   </br>
-		   <% if(nextPage){ %>
-		   <a href="/browse.jsp?results=<%= it + num %>">Next Page</a>
+		   <% if(nextPage){ //the links below add or subtract the num(results per page) to see the next set of desired results%>
+		   <a id="links" href="/browse.jsp?results=<%= it + num %>">&nbsp;<b>Next Page</b>&nbsp;</a>
 		   <%} if(it > num){%>
-		   <a href="/browse.jsp?results=<%= it - num %>">Previous Page</a>
+		   <a id="links" href="/browse.jsp?results=<%= it - num %>">&nbsp;<b>Previous Page</b>&nbsp;</a>
 		   <%} %>
 		   </br></br></br>
 		   </div>
