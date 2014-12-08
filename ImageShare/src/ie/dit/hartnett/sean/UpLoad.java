@@ -19,6 +19,12 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
+/**
+ * @author Sean
+ * This servlet is sent a call back when a blob is uploaded.
+ * It gets the blob key as a string and puts its in a DataSore
+ *
+ */
 public class UpLoad extends HttpServlet {
 
 private static final
@@ -50,7 +56,7 @@ public void doPost(HttpServletRequest req, HttpServletResponse res) throws Servl
 				pri = "not";
 			}
 			System.out.println("Image = " + pri);
-			if(pri.contentEquals(String.valueOf("private")))
+			if(pri==String.valueOf("private"))
 			{
 				privateImg = true;
 				System.out.println("Private");

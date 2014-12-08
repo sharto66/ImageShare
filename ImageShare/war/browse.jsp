@@ -57,12 +57,13 @@
 			 <%}%>
 		</div>
 		</div> <!-- end navbar div -->
-		</br></br></br></br></br></br>
+		</br></br></br></br></br></br></br></br>
 <!-- 		code below gets the database and loads its ImageStore table into a list -->
 		<%
 		  PersistenceManager pm = PMF.get().getPersistenceManager();  
 		  Query query = pm.newQuery("select from " + ImageStore.class.getName());  
 		  List<ImageStore> images = (List<ImageStore>) query.execute();
+		  
  		  %>
 		  <%String iterator = null;
 		  int it = 0;//code below gets value of results parameter from URL, including error checking
@@ -85,15 +86,11 @@
 					it = num;
 				}
 			}
-// 		  if(it >= images.size())
-// 		  {
-// 			  it = num;
-// 		  }
 		  int count = 0;
 		  boolean nextPage = true;
 			%>
 		  <div id="imgframe">
-<%-- 		  <%for(ImageStore i : images)//this for loop iterates through all the stored images --%>
+<%-- 		  <%for(ImageStore i : images)//this for loop iterates through the stored images --%>
 		  	<%for(count = it - num; count < it; count++)
 		    {%>
 		      <%if(userService.isUserLoggedIn() || !images.get(count).privateImg)
@@ -121,12 +118,13 @@
 						nextPage = false;
 						break; 
 					   }%>
-				<%}%>
+				<%}
+				  else it++;%><!-- if picture is private this increases result set so 5 images per page will be shown to guests -->
 		   <%}//end for loop%>
 		   </br>
 		   <% if(nextPage){ //the links below add or subtract the num(results per page) to see the next set of desired results%>
 		   <a id="links" href="/browse.jsp?results=<%= it + num %>">&nbsp;<b>Next Page</b>&nbsp;</a>
-		   <%} if(it > num){%>
+		   <%} if(it > num && it - num > 0){//The previous button shows up on the first page of results for guest%>
 		   <a id="links" href="/browse.jsp?results=<%= it - num %>">&nbsp;<b>Previous Page</b>&nbsp;</a>
 		   <%} %>
 		   </br></br></br>

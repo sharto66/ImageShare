@@ -22,13 +22,17 @@ public class Delete extends HttpServlet
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
-		BlobKey blobKey = new BlobKey(req.getParameter("deleteKey"));
-		System.out.println("before method call");
-		blobstoreService.delete(blobKey);
-		PersistenceManager pm = PMF.get().getPersistenceManager();  
-		Query query = pm.newQuery("select from " + ImageStore.class.getName());
-		query.setFilter("imgKey == '" + (String)req.getParameter("deleteKey") + "'");
-		query.deletePersistentAll();
-		res.sendRedirect("/");
+		UserService userService = UserServiceFactory.getUserService();
+		if(userService.isUserLoggedIn())
+		{
+			BlobKey blobKey = new BlobKey(req.getParameter("deleteKey"));
+			System.out.println("before method call");
+			blobstoreService.delete(blobKey);
+			PersistenceManager pm = PMF.get().getPersistenceManager();  
+			Query query = pm.newQuery("select from " + ImageStore.class.getName());
+			query.setFilter("imgKey == '" + (String)req.getParameter("deleteKey") + "'");
+			query.deletePersistentAll();
+			res.sendRedirect("/");
+		}
 	}
 }
