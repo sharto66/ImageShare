@@ -119,12 +119,12 @@
 						break; 
 					   }%>
 				<%}
-				  else it++;%><!-- if picture is private this increases result set so 5 images per page will be shown to guests -->
+				  /* else it++; */%><!-- if picture is private this increases result set so 5 images per page will be shown to guests -->
 		   <%}//end for loop%>
 		   </br>
 		   <% if(nextPage){ //the links below add or subtract the num(results per page) to see the next set of desired results%>
 		   <a id="links" href="/browse.jsp?results=<%= it + num %>">&nbsp;<b>Next Page</b>&nbsp;</a>
-		   <%} if(it > num && it - num > 0){//The previous button shows up on the first page of results for guest%>
+		   <%} if(it > num /* && it - num > 0 */){//The previous button shows up on the first page of results for guest%>
 		   <a id="links" href="/browse.jsp?results=<%= it - num %>">&nbsp;<b>Previous Page</b>&nbsp;</a>
 		   <%} %>
 		   </br></br></br>
