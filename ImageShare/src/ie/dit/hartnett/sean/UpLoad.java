@@ -23,6 +23,12 @@ import com.google.appengine.api.users.UserServiceFactory;
  * @author Sean
  * This servlet is sent a call back when a blob is uploaded.
  * It gets the blob key as a string and puts its in a DataSore
+ * along with other information like the current date and the 
+ * username of the uploader. It also reads in a parameter "Private"
+ * which is a checkbox on the upload form. It uses try catch blocks
+ * to see if theis parameter is present. If it is, a boolean "privateImg"
+ * is put as true in the datastore, othrewise it is false. A user must
+ * be logged in to use the UpLoad servlet 
  *
  */
 public class UpLoad extends HttpServlet {

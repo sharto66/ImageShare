@@ -63,7 +63,7 @@
 		  PersistenceManager pm = PMF.get().getPersistenceManager();  
 		  Query query = pm.newQuery("select from " + ImageStore.class.getName());  
 		  List<ImageStore> images = (List<ImageStore>) query.execute();
-		  
+		  //the datastore holds all the uploaded blobkeys as Strings and the above puts them in a list
  		  %>
 		  <%String iterator = null;
 		  int it = 0;//code below gets value of results parameter from URL, including error checking
@@ -94,12 +94,12 @@
 		  	<%for(count = it - num; count < it; count++)
 		    {%>
 		      <%if(userService.isUserLoggedIn() || !images.get(count).privateImg)
-		        {%>
+		        {//above if statement is to stop private images been shown to Guests %>
 		<a href="<%= "/serve?blob-key=" + images.get(count).imgKey %>"><img id="img" src="<%= "/serve?blob-key=" + images.get(count).imgKey %>"/></a></br>
 				  <% if(username != "Guest")
 				  	 {
 				  		 if(userService.isUserAdmin() ||  username.equals(images.get(count).user))
-					     {%>
+					     {//the delete button only shows up if user owns the image or is an admin%>
 					     	<a href="<%=response.encodeURL("/delete?deleteKey=" + images.get(count).imgKey)%>">Delete</a></br>
 					   <%}
 					 }%>
@@ -124,7 +124,7 @@
 		   </br>
 		   <% if(nextPage){ //the links below add or subtract the num(results per page) to see the next set of desired results%>
 		   <a id="links" href="/browse.jsp?results=<%= it + num %>">&nbsp;<b>Next Page</b>&nbsp;</a>
-		   <%} if(it > num /* && it - num > 0 */){//The previous button shows up on the first page of results for guest%>
+		   <%} if(it > num /* && it - num > 0 */){//The previous button shows up on the first page of results for guest if this preceding comment is left in, but correct num of results are diaplayed per page%>
 		   <a id="links" href="/browse.jsp?results=<%= it - num %>">&nbsp;<b>Previous Page</b>&nbsp;</a>
 		   <%} %>
 		   </br></br></br>
