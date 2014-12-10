@@ -40,9 +40,11 @@
 				  {
 					username = "Guest";
 				  }%>
+				
 				Logged in as <%= "<b>" + username + "</b>" %>&nbsp;&nbsp;
 				<a id="links" href="<%= userService.createLoginURL(URL).toString() %>"><b>&nbsp;Login&nbsp;</b></a>&nbsp;&nbsp;
-				<a id="links" href="<%= userService.createLogoutURL(URL).toString() %>"><b>&nbsp;Logout&nbsp;</b></a>
+				<a id="links" href="<%= userService.createLogoutURL(URL).toString() %>"><b>&nbsp;Logout&nbsp;</b></a>&nbsp;&nbsp;
+				<a href="https://www.dropbox.com/s/dtnkw331yrl02az/ImageShare%20User%20Guide.pdf?dl=0">User Guide here</a>
 		</div>
 		
 		<div id="upload">
