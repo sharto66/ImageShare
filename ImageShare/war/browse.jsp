@@ -60,11 +60,13 @@
 		</div>
 		</div> <!-- end navbar div -->
 		</br></br></br></br></br></br></br></br>
-<!-- 		code below gets the database and loads its ImageStore table into a list -->
-		<%
+<!-- 		code below gets the database and loads its ImageStore table into a list
+			Taken from http://jeftechjava.blogspot.ie/2011/05/how-to-create-listview-in-android.html -->
+		<%//referenced code
 		  PersistenceManager pm = PMF.get().getPersistenceManager();  
 		  Query query = pm.newQuery("select from " + ImageStore.class.getName());  
 		  List<ImageStore> images = (List<ImageStore>) query.execute();
+		  //end referenced code
 		  //the datastore holds all the uploaded blobkeys as Strings and the above puts them in a list
  		  %>
 		  <%String iterator = null;
@@ -102,8 +104,9 @@
 				  	 {
 				  		 if(userService.isUserAdmin() ||  username.equals(images.get(count).user))
 					     {//the delete button only shows up if user owns the image or is an admin%>
+					     <%if(images.size() > 1){ %>
 					     	<a href="<%=response.encodeURL("/delete?deleteKey=" + images.get(count).imgKey)%>">Delete</a></br>
-					   <%}
+					   <%}}
 					 }%>
 				  Uploaded by: <%out.println("<b>" + images.get(count).user + "</b>"); %></br>
 				  Date: <%SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss");out.println(dateFormat.format(images.get(count).date)); %></br>
